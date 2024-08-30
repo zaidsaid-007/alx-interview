@@ -4,57 +4,46 @@ Module for 0x0C. N Queens.
 ALX
 Specializations - Interview Preparation ― Algorithms
 """
-import sys
 
+from sys import argv, exit
 
-
-def solveNQueens(n):
-    """Solves the N-Queens problem and returns all possible solutions."""
-    res = []
-    queens = [-1] * n  # Initialize the list to store queen positions
-
-    def dfs(row):
-        """Performs a depth-first search to place queens row by row."""
-        if row == n:  # All queens have been placed successfully
-            res.append(queens[:])
-            return
-        for col in range(n):
-            queens[row] = col
-            if is_valid(row):
-                dfs(row + 1)
-
-    def is_valid(row):
-        """Checks if the current placement of queens is valid."""
-        for prev_row in range(row):
-            # Check column and diagonal conflicts
-            if (queens[prev_row] == queens[row] or
-                    abs(queens[prev_row] - queens[row]) == row - prev_row):
+def solve_n_queens(n):
+    def is_safe(board, row, col):
+        for i in range(row):
+            if board[i] == col or \
+                board[i] - i == col - row or \
+                board[i] + i == col + row:
                 return False
         return True
 
-    def format_solutions(res):
-        """Formats the list of solutions into the required output format."""
-        return [[(i, queens[i]) for i in range(n)] for queens in res]
+    def place_queens(n, row, board):
+        if row == n:
+            result.append(board[:])
+            return
+        for col in range(n):
+            if is_safe(board, row, col):
+                board[row] = col
+                place_queens(n, row + 1, board)
 
-    dfs(0)
-    return format_solutions(res)
-
+    result = []
+    place_queens(n, 0, [-1]*n)
+    return result
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(argv) != 2:
         print("Usage: nqueens N")
-        sys.exit(1)
+        exit(1)
 
     try:
-        n = int(sys.argv[1])
+        n = int(argv[1])
     except ValueError:
         print("N must be a number")
-        sys.exit(1)
+        exit(1)
 
     if n < 4:
         print("N must be at least 4")
-        sys.exit(1)
+        exit(1)
 
-    solutions = solveNQueens(n)
+    solutions = solve_n_queens(n)
     for solution in solutions:
-        print(solution)
+        print([list((i, j)) for i, j in enumerate(solution)])
