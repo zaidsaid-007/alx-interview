@@ -1,46 +1,58 @@
 #!/usr/bin/python3
 """
 Module for 0x0C. N Queens.
-ALX
+Holberton School
 Specializations - Interview Preparation ― Algorithms
 """
 from sys import argv, exit
 
+
 def solveNQueens(n):
-    """Solves the N-Queens problem and returns all solutions."""
+    """Program that solves the N queens problem"""
     res = []
-    queens = [-1] * n  # Initialize the queens' positions
+    queens = [-1] * n
+    # queens is a one-dimension array, like [1, 3, 0, 2] means
+    # index represents row no and value represents col no
 
-    def dfs(row):
-        """Performs a DFS to place queens row by row."""
-        if row == n:  # All queens have been placed
+    def dfs(index):
+        """Recursively resolves the N queens problem"""
+        if index == len(queens):  # n queens have been placed correctly
             res.append(queens[:])
-            return
-        for col in range(n):
-            queens[row] = col
-            if is_valid(row):  # Check if placing the queen here is valid
-                dfs(row + 1)
+            return  # backtracking
+        for i in range(len(queens)):
+            queens[index] = i
+            if valid(index):  # pruning
+                dfs(index + 1)
 
-    def is_valid(row):
-        """Checks if the current queen placement is valid."""
-        for i in range(row):
-            if queens[i] == queens[row] or abs(queens[i] - queens[row]) == row - i:
+    # check whether nth queens can be placed
+    def valid(n):
+        """Method that checks if a position in the board is valid"""
+        for i in range(n):
+            if abs(queens[i] - queens[n]) == n - i:  # same diagonal
+                return False
+            if queens[i] == queens[n]:  # same column
                 return False
         return True
 
-    def format_solutions(res):
-        """Formats the result into a list of lists of coordinates."""
+    # given queens = [1,3,0,2] this function returns
+    # [[0, 1], [1, 3], [2, 0], [3, 2]]
+
+    def make_all_boards(res):
+        """Method that builts the List that be returned"""
         actual_boards = []
         for queens in res:
-            board = [[row, col] for row, col in enumerate(queens)]
+            board = []
+            for row, col in enumerate(queens):
+                board.append([row, col])
             actual_boards.append(board)
         return actual_boards
 
     dfs(0)
-    return format_solutions(res)
+    return make_all_boards(res)
+
 
 if __name__ == "__main__":
-    if len(argv) != 2:
+    if len(argv) < 2:
         print('Usage: nqueens N')
         exit(1)
     try:
@@ -52,7 +64,7 @@ if __name__ == "__main__":
     if n < 4:
         print('N must be at least 4')
         exit(1)
-
-    solutions = solveNQueens(n)
-    for solution in solutions:
-        print(solution)
+    else:
+        result = solveNQueens(n)
+        for row in result:
+            print(row)
