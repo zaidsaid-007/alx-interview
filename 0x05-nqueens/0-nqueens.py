@@ -5,54 +5,122 @@ ALX
 Specializations - Interview Preparation ― Algorithms
 """
 
-from sys import argv, exit
+import sys
 
-def solve_n_queens(n):
+
+def print_board(board):
+    """ print_board
+    Args:
+        board - list of list with length sys.argv[1]
     """
-    Solves the N-Queens problem and returns all possible solutions.
+    new_list = []
+    for i, row in enumerate(board):
+        value = []
+        for j, col in enumerate(row):
+            if col == 1:
+                value.append(i)
+                value.append(j)
+        new_list.append(value)
+
+    print(new_list)
+
+
+def isSafe(board, row, col, number):
+    """ isSafe
+    Args:
+        board - list of list with length sys.argv[1]
+        row - row to check if is safe doing a movement in this position
+        col - col to check if is safe doing a movement in this position
+        number: size of the board
+    Return: True of False
     """
-    def is_safe(board, row, col):
-        """
-        Checks if a queen can be placed at a given position.
-        """
-        for i in range(row):
-            if board[i] == col or \
-               board[i] - i == col - row or \
-               board[i] + i == col + row:
-                return False
+
+    # Check this row in the left side
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    # Check upper diagonal on left side
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    for i, j in zip(range(row, number, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    return True
+
+
+def solveNQUtil(board, col, number):
+    """ Auxiliar method to find the posibilities of answer
+    Args:
+        board - Board to resolve
+        col - Number of col
+        number - size of the board
+    Returns:
+        All the posibilites to solve the problem
+    """
+
+    if (col == number):
+        print_board(board)
         return True
+    res = False
+    for i in range(number):
 
-    def place_queens(n, row, board):
-        """
-        Recursively places queens on the board.
-        """
-        if row == n:
-            result.append(board[:])
-            return
-        for col in range(n):
-            if is_safe(board, row, col):
-                board[row] = col
-                place_queens(n, row + 1, board)
+        if (isSafe(board, i, col, number)):
 
-    result = []
-    place_queens(n, 0, [-1] * n)
-    return result
+            # Place this queen in board[i][col]
+            board[i][col] = 1
 
-if __name__ == "__main__":
-    if len(argv) != 2:
+            # Make result true if any placement
+            # is possible
+            res = solveNQUtil(board, col + 1, number) or res
+
+            board[i][col] = 0  # BACKTRACK
+
+    return res
+
+
+def solve(number):
+    """ Find all the posibilities if exists
+    Args:
+        number - size of the board
+    """
+    board = [[0 for i in range(number)]for i in range(number)]
+
+    if not solveNQUtil(board, 0, number):
+        return False
+
+    return True
+
+
+def validate(args):
+    """ Validate the input data to verify if the size to
+        answer is posible
+    Args:
+        args - sys.argv
+    """
+    if (len(args) == 2):
+        # Validate data
+        try:
+            number = int(args[1])
+        except Exception:
+            print("N must be a number")
+            exit(1)
+        if number < 4:
+            print("N must be at least 4")
+            exit(1)
+        return number
+    else:
         print("Usage: nqueens N")
         exit(1)
 
-    try:
-        n = int(argv[1])
-    except ValueError:
-        print("N must be a number")
-        exit(1)
 
-    if n < 4:
-        print("N must be at least 4")
-        exit(1)
+if __name__ == "__main__":
+    """ Main method to execute the application
+    """
 
-    solutions = solve_n_queens(n)
-    for solution in solutions:
-        print([list((i, j)) for i, j in enumerate(solution)])
+    number = validate(sys.argv)
+    solve(number)
+
