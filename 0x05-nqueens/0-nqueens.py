@@ -5,7 +5,7 @@ ALX
 Specializations - Interview Preparation ― Algorithms
 """
 import sys
-from sys import argv, exit
+
 
 
 def solveNQueens(n):
