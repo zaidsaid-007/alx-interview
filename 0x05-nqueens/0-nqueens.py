@@ -4,9 +4,7 @@ Module for 0x0C. N Queens.
 ALX
 Specializations - Interview Preparation ― Algorithms
 """
-import sys
 from sys import argv, exit
-
 
 def solveNQueens(n):
     """Solves the N-Queens problem and returns all possible solutions."""
@@ -34,27 +32,29 @@ def solveNQueens(n):
 
     def format_solutions(res):
         """Formats the list of solutions into the required output format."""
-        return [[(i, queens[i]) for i in range(n)] for queens in res]
+        return [["." * i + "Q" + "." * (n - i - 1) for i in queens] for queens in res]
 
     dfs(0)
     return format_solutions(res)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(argv) != 2:
         print("Usage: nqueens N")
-        sys.exit(1)
+        exit(1)
 
     try:
-        n = int(sys.argv[1])
+        n = int(argv[1])
     except ValueError:
         print("N must be a number")
-        sys.exit(1)
+        exit(1)
 
     if n < 4:
         print("N must be at least 4")
-        sys.exit(1)
+        exit(1)
 
     solutions = solveNQueens(n)
     for solution in solutions:
-        print(solution)
+        for row in solution:
+            print(row)
+        print()
