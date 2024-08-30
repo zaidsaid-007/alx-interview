@@ -4,9 +4,8 @@ Module for 0x0C. N Queens.
 ALX
 Specializations - Interview Preparation ― Algorithms
 """
+from sys import argv, exit
 import sys
-
-
 
 def solveNQueens(n):
     """Solves the N-Queens problem and returns all possible solutions."""
