@@ -1,4 +1,4 @@
-# Prime Number Game Challenge - README
+# Prime Number Game 
 
 ## Overview
 
