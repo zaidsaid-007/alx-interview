@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """ Prime Game  """
 def isWinner(x, nums):
     """ Returns the winner of the Prime Game """
