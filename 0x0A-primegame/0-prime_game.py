@@ -27,7 +27,12 @@ def isWinner(x, nums):
 
     for num in nums:
         primes = calculate_primes(num)
-        if len(primes) % 2 == 0:
+        turn = 0  # Maria starts first
+        while primes:
+            prime = primes.pop(0)
+            primes = [p for p in primes if p % prime != 0]
+            turn += 1
+        if turn % 2 == 0:
             ben_wins += 1
         else:
             maria_wins += 1
